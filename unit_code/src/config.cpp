@@ -11,7 +11,7 @@ namespace Config{
     unsigned int size_packet_exp = 0;
     // total time experiment in millisec
     int tot_time_exp = 0;
-    //Qts
+    //Qts (not used)
     int qts = 0;
     // calculate time paho client in microseconds
     int calc_time = 0;
