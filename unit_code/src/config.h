@@ -14,7 +14,7 @@ namespace Config{
     extern unsigned int size_packet_exp;
     // total time experiment in millisec
     extern int tot_time_exp;
-    //Qts
+    //Qts (not used)
     extern int qts;
     // calculate time on paho client in microseconds
     extern int calc_time;
