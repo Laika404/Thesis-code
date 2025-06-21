@@ -1,6 +1,14 @@
+// Used to handle any message in json format
+// messages include
+
+// sta : start experiment
+// sto : stop experiment
+// off : Turn the Unit off
+
 #include <ArduinoJson.h>
 #include "config.h"
 #include <M5Core2.h>
+
 
 void handleJsonMessageStart(const char* message) {
   StaticJsonDocument<200> doc; // Adjust size based on your expected JSON
@@ -22,6 +30,7 @@ void handleJsonMessageStart(const char* message) {
     std::string start_try = "sta";
     std::string stop_try = "sto";
     std::string off_try = "off";
+    // Start experiment and configure parameters
     if (doc["tp"] == start_try && Config::start_exp != 2) {
       Serial.println("message is from sta");
       Config::start_exp = 1;
@@ -34,7 +43,7 @@ void handleJsonMessageStart(const char* message) {
       int cur_pos = 0;
       int add_pos;
       int conf_values[5] = {Config::tot_time_exp, Config::freq_exp, Config::size_packet_exp, Config::qts, Config::calc_time};
-      // use place 300 and beyond for notepad
+      // this message will be used to start the broker containing the parameters of the experiment
       for (int i=0; i<5; i++){
         snprintf(&Config::new_message[300], PLUGIN_SZ, "%d", conf_values[i]);
         add_pos = strlen(&Config::new_message[300]);
