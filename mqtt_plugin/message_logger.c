@@ -1,7 +1,7 @@
 // Mosquitto plugin made to collect data from the Unit, Gateway and Broker
 // QoS is mentioned but not in use (does not work)
 // print (LOG) statements only work if you dont run it via systemd
-// IMPORTANT FOR MOSQUITTO TO HAVE PERMISSION TO -> /mosquitto_data
+// IMPORTANT FOR MOSQUITTO TO HAVE PERMISSION TO -> data_dir
 
 #define _GNU_SOURCE // otherwise strdup not recognized
 #define _POSIX_C_SOURCE 199309L  // Enable POSIX features (for clock_gettime)
