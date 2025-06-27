@@ -228,7 +228,7 @@ def find_point(client:c.ExperimentClient, percentage,  wifi_str: tuple = (None, 
     return cur_hz
 
 
-
+# run an experiment with message size and frequency
 def run_main_experiment(client: c.ExperimentClient, steps_approx, steps_size, file_name="main.csv", 
                         limits_size = None, repeat=1, dir_name = 'notadir', check_time=2, wait_for_wifi=0, wifi_str: tuple = (None, None),
                          duration = None, calc_time = None, preamble_time = 5):
@@ -256,20 +256,16 @@ def run_main_experiment(client: c.ExperimentClient, steps_approx, steps_size, fi
             steps_size = [int(limits_size[0]+(limits_size[1]-limits_size[0])*(i/(steps_size-1))) for i in range(steps_size)]
         except:
             raise ValueError("limits needs to be a tuple")
-    # try to find the 2% data point 5% datapoint and the 12 % data point
-    # with these an experiment can be made
+
     for step_s in steps_size:
         client.change_single("ps", step_s)
-        # losses =[[467, 765], [461, 789], [477, 821], [540, 789], [484, 734], [483, 727]]
-        # for i in range(repeat):
-            # hz_5, loss_5 = find_point(client, 5, wifi_str=wifi_str)
-            # with open(f"{data_path}/{file_name}", "a") as file:
-            #     file.write(f"{hz_5}, {loss_5}")
+
         find_duration = 3
         while True:
             loss_2 = find_point(client, 2, wifi_str=wifi_str, duration=find_duration)
             loss_12 = find_point(client, 12, wifi_str=wifi_str, duration=find_duration)
             print(f"FOUND VALUES 2%={loss_2} & 12%={loss_12}")
+            
             run_bunch(client, "hz", steps_approx, limits=[loss_2, loss_12], duration=duration, calc_time=calc_time, dir_name=f"{dir_name}/data_ps_{step_s}",
                     wait_for_wifi=wait_for_wifi, wifi_str=wifi_str, repeat=repeat, check_time=check_time, preamble_time=0)
 
@@ -283,10 +279,11 @@ def run_main_experiment(client: c.ExperimentClient, steps_approx, steps_size, fi
 
 
 
-
+# organizes the data from the message size, message frequency experiment so that it can be used for plotting
 def organize_main_experiment_data(client: c.ExperimentClient, steps_approx, steps_size, file_name="main", 
                         limits_size = None, dir_name = 'notadir', wifi_str: tuple = (None, None),
                         calc_time = None, duration=None, show_graph=False):
+    # file for new data
     file_name = f"{file_name}.csv"
     data_path = f"{fe.actual_data_dir}/{dir_name}/"
     if os.path.exists(data_path) is False:
@@ -301,65 +298,12 @@ def organize_main_experiment_data(client: c.ExperimentClient, steps_approx, step
         try:
             steps_size = [int(limits_size[0]+(limits_size[1]-limits_size[0])*(i/(steps_size-1))) for i in range(steps_size)]
         except:
-            raise ValueError("limits needs to be a tuple")
+            raise ValueError("limits needs to be a list with len = 2")
     
+    # perform the threshold algorithm splines on all data
     for step_s in steps_size:
         client.change_single("ps", step_s)
         full_data_loss = vis.get_data_packet_loss(client, f"{dir_name}/data_ps_{step_s}", "hz", steps_approx, limits=[0, 0], wifi_str=wifi_str)
         freq_s = da.get_threshold(*full_data_loss, 5, show=show_graph)
         with open(f"{fe.processed_dir}/{file_name}", 'a') as file:
             file.write(f"{step_s},{freq_s[0]},{freq_s[1][0]}, {freq_s[1][1]}, {max(0, freq_s[0]*step_s*0.95)}\n")
-
-
-
-
-    
-
-
-# # wifi test 1
-# if __name__ == "__main__":
-#     main_client = c.ExperimentClient()
-#     main_client.startup_client()
-#     # run_bunch(main_client, "wifi", steps= 8, limits=[-35, -75], 
-#     #           repeat=4, dir_name="experiment_wifi_1", wifi_str=[-69, 2], frequency=400, duration=4, calc_time=0)
-#     # run_main_experiment(main_client, 20, 15, limits_size=[0, 4000], duration=10, repeat=3, wifi_str=[-50, 2], dir_name="main_experiment2")
-#     organize_main_experiment_data(main_client, 20, 15, limits_size=[0, 4000], duration=10, wifi_str=[-50, 2], dir_name="main_experiment2")
-
-
-# # packet size test 3
-# if __name__ == "__main__":
-#     main_client = c.ExperimentClient()
-#     main_client.startup_client()
-#     limits_size = [4200, 10_000]
-#     steps = [int(limits_size[0]+(limits_size[1]-limits_size[0])*(i/(15-1))) for i in range(15)]
-    # run_main_experiment(main_client, 20, steps[9:], limits_size=[-1, -1], duration=10, repeat=3, wifi_str=[-50, 2], dir_name="main_experiment_large_packet")
-    # organize_main_experiment_data(main_client, 20, steps[:9], limits_size=[-1, -1], duration=10, wifi_str=[-50, 2], dir_name="main_experiment_large_packet", file_name="extra", show_graph=True)
-
-    # organize_main_experiment_data(main_client, 20, 15, limits_size=[0, 4000], duration=10, wifi_str=[-50, 2], dir_name="main_experiment2", file_name="dump", show_graph=True)
-
-
-
-
-
-# packet size test 1
-if __name__ == "__main__":
-    main_client = c.ExperimentClient()
-    main_client.startup_client()
-#     run_bunch(main_client, "ps", steps= 100, limits=[50, 2000], 
-#               repeat=6, dir_name="new_experiment_size_1", wifi_str=[-50, 2], frequency=400, duration=10, calc_time=0)
-
-
-# packet size tesst 2
-    limits = [1000, 10000]
-    steppies = [int(limits[0]+(limits[1]-limits[0])*(i/(250-1))) for i in range(250)]
-    run_bunch(main_client, "ps", steps= steppies[116:], limits=[1000, 10000], 
-              repeat=6, dir_name="new_experiment_size_3", wifi_str=[-50, 2], frequency=400, duration=10, calc_time=0)
-    
-
-# # frequency 1
-#     run_bunch(main_client, "hz", steps= 100, limits=[100, 5000], 
-#               repeat=6, dir_name="new_experiment_frequency_1", wifi_str=[-50, 2], message_size=350, duration=10, calc_time=0)
-
-# # frequency test 2
-#     run_bunch(main_client, "hz", steps= 100, limits=[100, 5000], 
-#               repeat=6, dir_name="new_experiment_frequency_2", wifi_str=[-50, 2], message_size=3500, duration=10, calc_time=0)
