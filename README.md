@@ -1,3 +1,6 @@
+# Unit-to-Gateway code - Bachelor Thesis
+### Maker: Sietse van de Griend
+
 This is the codebase for the code used in the thesis "Packet Loss in MQTT ProtocolBased Communication for SensorSPHERE"
 
 abstract:
@@ -18,5 +21,7 @@ for all the environmental factors. Based on these insights, this thesis recommen
 SensorSPHERE team optimize throughput by increasing message size and reducing message
 frequency.
 
+
+[Thesis](https://scripties.uba.uva.nl/search?id=record_56102)
 
 The code is made to work on Linux Ubuntu 24.04.2 LTS
