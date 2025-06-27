@@ -68,12 +68,10 @@ def get_threshold(x_data, y_data, std_dev_data, tresh_value, show=False):
         'std_dev': std_dev_data 
     }
     df = pd.DataFrame(data)
-    df['std_dev'] = df['std_dev'].fillna(0.1).clip(lower=1e-2)  # or another small floor
+    df['std_dev'] = df['std_dev'].fillna(0.1).clip(lower=1e-2)  # remove direct 0's
     df['weights'] = 1 / (df['std_dev'] ** 2)
 
-    # print("Number of unique x values:", df['x'].nunique())
-    
-    # print("Min std dev:", df['std_dev'].min())
+
 
     spline_formula = "bs(x, df=5, degree=3, include_intercept=True)"
     # Spline basis for model
@@ -87,21 +85,23 @@ def get_threshold(x_data, y_data, std_dev_data, tresh_value, show=False):
     x_pred = pd.DataFrame({'x': np.linspace(df['x'].min(), df['x'].max(), 300)})
     x_pred_spline = dmatrix(design_info, x_pred, return_type='dataframe')
 
+    # Prediction based on spline
     predicted = model.get_prediction(x_pred_spline)
     pred_summary = predicted.summary_frame(alpha=0.05)
 
+    # Helper function used to find threshold
     def model_minus_target(x):
         x_df = pd.DataFrame({'x': [x]})
         x_spline = dmatrix(design_info, x_df, return_type='dataframe')
         y_pred = model.predict(x_spline)[0]
         return y_pred - tresh_value
+    # Try to find threshold x value, if not return not found responese
     try:
         x0 = root_scalar(model_minus_target, bracket=[df['x'].min(), df['x'].max()], method='brentq').root
     except:
         return [-1, [0, 0]]
     
-    # feed it back in
-    # Prediction at specific x0
+    # Y value at x0
     x0_df = pd.DataFrame({'x': [x0]})
     x0_spline = dmatrix(design_info, x0_df, return_type='dataframe')
     x0_pred = model.get_prediction(x0_spline).summary_frame(alpha=0.05)
