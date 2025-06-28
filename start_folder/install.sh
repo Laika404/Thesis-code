@@ -27,3 +27,8 @@ sudo cp ./user.conf /etc/mosquitto/conf.d/user.conf
 
 # make a plugins directory
 sudo mkdir /etc/mosquitto/plugins
+
+# make binaries for plugin and Gateway client
+sudo ./../mqtt_plugin/plugin_refresh.sh
+sudo ./../gateway_client/mqtt_client_run.sh
+
