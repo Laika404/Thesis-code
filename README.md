@@ -1,9 +1,9 @@
 # Unit-to-Gateway code - Bachelor Thesis
-### Maker: Sietse van de Griend
+#### Maker: Sietse van de Griend
+#### Title: Packet Loss in MQTT ProtocolBased Communication for SensorSPHERE
+#### Source:  [Thesis](https://scripties.uba.uva.nl/search?id=record_56102)
 
-This is the codebase for the code used in the thesis "Packet Loss in MQTT ProtocolBased Communication for SensorSPHERE"
-
-abstract:
+#### abstract:
 The MQTT protocol is a widely used communication protocol in real-world IoT (Internet
 of Things) applications, including Wireless Sensor Networks (WSNs). One of the latest
 products implementing the MQTT protocol for WSN’s is the currently in development
@@ -22,6 +22,7 @@ SensorSPHERE team optimize throughput by increasing message size and reducing me
 frequency.
 
 
-[Thesis](https://scripties.uba.uva.nl/search?id=record_56102)
 
+
+## How to install
 The code is made to work on Linux Ubuntu 24.04.2 LTS
