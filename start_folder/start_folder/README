@@ -1,2 +1,0 @@
-To run use install.sh, make sure every sh file has +x permissions
-make sure user.conf has the right permissions in etc/mosquitto/conf.d
