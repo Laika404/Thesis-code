@@ -25,4 +25,19 @@ frequency.
 
 
 ## How to install
-The code is made to work on Linux Ubuntu 24.04.2 LTS
+The code is made to work on Linux Ubuntu 24.04.2 LTS.
+
+
+### Python depencies
+Python code made to work for Python version 3.12.3 64-bit
+These dependencies need to be downloaded manually
+
+| Python dependencies |
+|:-------------|
+|paho.mqtt.client|
+|matplotlib.pyplot|
+|Pandas|
+|NumPy|
+|Patsy|
+|SciPy|
+|Statsmodels|
