@@ -29,6 +29,10 @@ The code is made to work on Linux Ubuntu 24.04.2 LTS.
 ### 1. Run the install script
 *WARNING, THIS HAS NOT BEEN TESTED*
 
+
+(make sure all .sh files have execute permissions)
+Run start_folder/install.sh
+
 ### 2. Python depencies
 Python code made to work for Python version 3.12.3 64-bit
 These dependencies need to be downloaded manually
@@ -42,7 +46,10 @@ These dependencies need to be downloaded manually
 |Patsy|
 |SciPy|
 |Statsmodels|
-### 3. Startup
 
+### 3. Startup
+(use ./start_mqtt.sh -test for test purposes and to see print statements)
+run ./start_mqtt.sh
 
 ### 4. Stop
+run ./stop_mqtt.sh
